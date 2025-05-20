@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import axios from 'axios'
+//import axios from 'axios'
 import './App.css'
 
 function App() {
@@ -20,6 +20,29 @@ function App() {
     const normalizedType =
       vehicleType.charAt(0).toUpperCase() + vehicleType.slice(1).toLowerCase()
     return premiumInfo[normalizedType] || 'No premium information available'
+  }
+
+  //Handling image upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setImage(file)
+      setPreview(URL.createObjectURL(file))
+    }
+  }
+
+  //Submitting to the API
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!image) return alert('Please upload an image')
+
+    setLoading(true)
+    setPrediction(null)
+
+    //Google Cloud Vision API endpoint
+    //const apiEndpoint =
+    //  'https://vision.googleapis.com/v1/images:annot'
+    //const predictionKey = ''
   }
 }
 export default App
