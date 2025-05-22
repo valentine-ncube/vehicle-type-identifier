@@ -70,7 +70,7 @@ function App() {
       }
 
       // 3) Call Google Vision REST endpoint
-      const API_Key = 'AIzaSyBXfdR4NuE37YZ85austKykq_nau0OiBVI'
+      const API_Key = process.env.REACT_APP_VISION_KEY
       const URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_Key}`
       const { data } = await axios.post(URL, payload)
 
