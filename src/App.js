@@ -44,5 +44,40 @@ function App() {
     //  'https://vision.googleapis.com/v1/images:annot'
     //const predictionKey = ''
   }
+
+  return (
+    <div className="app-container">
+      <h1>Vehicle Type Identification</h1>
+      <form className="form-container" onSubmit={handleSubmit}>
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Analyzing...' : 'Upload'}
+        </button>
+      </form>
+
+      {preview && (
+        <div className="preview-container">
+          <img
+            src={preview}
+            alt="Uploaded Preview"
+            className="uploaded-image"
+          />
+        </div>
+      )}
+
+      {prediction && (
+        <div>
+          <h2>Prediction Result:</h2>
+          <p>
+            <strong>Type:</strong> {prediction.tagName}
+          </p>
+          <p>
+            <strong>Insurance Info:</strong>{' '}
+            {getInsuranceInfo(prediction.tagName)}
+          </p>
+        </div>
+      )}
+    </div>
+  )
 }
 export default App
