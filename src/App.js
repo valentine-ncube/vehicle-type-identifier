@@ -31,6 +31,19 @@ function App() {
     }
   }
 
+  // Helper: convert File → Base64 string
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => {
+        // strip off the "data:*/*;base64," prefix
+        const base64 = reader.result.split(',')[1]
+        resolve(base64)
+      }
+      reader.onerror = (error) => reject(error)
+    })
+
   //Submitting to the API
   const handleSubmit = async (e) => {
     e.preventDefault()
