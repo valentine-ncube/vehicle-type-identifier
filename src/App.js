@@ -47,15 +47,48 @@ function App() {
   //Submitting to the API
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!image) return alert('Please upload an image')
+    if (!image) {
+      alert('Please upload an image!')
+      return
+    }
 
     setLoading(true)
     setPrediction(null)
 
-    //Google Cloud Vision API endpoint
-    //const apiEndpoint =
-    //  'https://vision.googleapis.com/v1/images:annot'
-    //const predictionKey = ''
+    try {
+      // 1) Convert image to Base64
+      const base64 = await toBase64(image)
+
+      // 2) Prepare Vision API request payload
+      const payload = {
+        requests: [
+          {
+            image: { content: base64 },
+            features: [{ type: 'LABEL_DETECTION', maxResults: 5 }],
+          },
+        ],
+      }
+
+      // 3) Call Google Vision REST endpoint
+      const API_Key = 'AIzaSyBXfdR4NuE37YZ85austKykq_nau0OiBVI'
+      const URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_Key}`
+      const { data } = await axios.post(URL, payload)
+
+      // 4) Extract labels and pick a matching vehicle type
+      const labels = data.responses[0].labelAnnotations.map(
+        (l) => l.description
+      )
+      const vehicle =
+        labels.find((l) => /^(suv|truck|sedan|car|vehicle)$/i.test(l)) ||
+        'Unknown'
+
+      setPrediction({ tagName: vehicle })
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Vision API error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
